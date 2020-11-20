@@ -175,7 +175,9 @@ def is_where_part_valid(i_where_part):
 def is_valid_query(i_query):
     result = "Valid"
     query = i_query.strip()
-    query = query.lower()  # so our check is case-insensitive  
+    query = query.lower()  # so our check is case-insensitive
+    if(query[-1]==";"):
+        query=query[0:-1]
 
     select_index = query.find("select")     
     from_index = query.find("from")
