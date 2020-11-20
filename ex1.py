@@ -1,22 +1,106 @@
+def is_valid_constant(i_constant):
+    result = False
+    constant = i_constant.strip()
+    print("constant : " + constant)
+    if(is_valid_attribute(constant)):
+        result = True
+    elif(constant.isnumeric()):
+        result = True
+    elif(isinstance(constant, str)):
+        if(constant.startswith("\"") and constant.endswith("\"")):
+            result = True
+    if(result):
+        print("constant ok")
+    else:
+        print("constant not ok")
+    return result
+
+
+def find_valid_operator(i_simple_condition):
+    simple_condition = i_simple_condition.strip()
+    if(simple_condition.find("<=") != -1):
+        result = "<="
+    elif(simple_condition.find(">=") != -1):
+        result = ">="
+    elif(simple_condition.find("<>") != -1):
+        result = "<>"
+    elif(simple_condition.find("=") != -1):
+        result = "="
+    elif(simple_condition.find("<") != -1):
+        result = "<"
+    elif(simple_condition.find(">") != -1):
+        result = ">"
+    else:
+        result = -1
+    print("operator is :"+ result)
+    return result
+
 
 def is_valid_simple_condition(i_simple_condition):
-    pass
+    simple_condition = i_simple_condition.strip()
+    print("simple condition = " + simple_condition)
+
+    operator = find_valid_operator(simple_condition)
+    if(operator == -1):
+        print("operator not ok")
+        result = False
+    else:
+        print("operator ok")
+        parts_array = simple_condition.split(operator)
+        print("split result:" +parts_array[0]+ parts_array[1])
+        result = is_valid_constant(
+            parts_array[0]) and is_valid_constant(parts_array[1])
+    return result
 
 
 def is_valid_condition(i_condition):
     condition = i_condition.strip()
+    print("condition is :" + condition)
     if(is_valid_simple_condition(condition)):
         result = True
+        print("simple condition ok")
     else:
-        pass
+        checked_all_options = False
+        and_index = condition.find("and")
+        or_index = condition.find("or")
+
+        while(not checked_all_options):
+            if(and_index != -1):
+                left_and_string = condition[0:and_index]
+                right_and_string = condition[and_index+3:]
+                result = is_valid_condition(
+                    left_and_string) and is_valid_condition(right_and_string)
+                if(result):
+                    checked_all_options = True
+                    break
+                else:
+                    and_index = condition.find("and", and_index+3)
+            elif(or_index != -1):
+                left_or_string = condition[0:or_index]
+                right_or_string = condition[or_index+2:]
+                result = is_valid_condition(
+                    left_or_string) and is_valid_condition(right_or_string)
+                if(result):
+                    checked_all_options = True
+                    break
+                else:
+                    or_index = condition.find("or", or_index+2)
+            else:  # both indexes not found
+                checked_all_options = True
+                if(condition[0] == "(" and condition[-1] == ")"):
+                    print("removing brackets")
+                    result = is_valid_condition(condition[1:-1])
+                else:
+                    result = False
+
     return result
 
 
 def is_where_part_valid(i_where_part):
-    if(i_where_part[5] == " "):
-        where_part = i_where_part.strip()
+    where_part = i_where_part.strip()
+    print("where part is :" + where_part)
+    if(where_part[5] == " "):
         result = is_valid_condition(where_part[5:])
-        print("space is  ok")
 
     else:
         print("space is not ok")
@@ -132,5 +216,5 @@ def is_valid_query(i_query):
 # orders["CustomerName"]="STRING"
 # orders["Product"] = "STRING"
 # orders["Price"] = "INTEGER"
-query = "SELECT  Orders.Price FROM Customers, Orders  WHERE Customer.Age=25;"
+query = "SELECT  Orders.Price FROM Customers, Orders  WHERE Customers.Age=25"
 is_valid_query(query)
