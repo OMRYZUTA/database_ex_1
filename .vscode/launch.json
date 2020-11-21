@@ -5,10 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: ex1",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "$ex1.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: ex1.tests",
+            "type": "python",
+            "request": "launch",
+            "program": "ex1.tests.py",
             "console": "integratedTerminal"
         }
     ]

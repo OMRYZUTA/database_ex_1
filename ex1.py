@@ -18,7 +18,9 @@ def is_valid_constant(i_constant):
     elif(constant.isnumeric()):
         result = True
     elif(isinstance(constant, str)):
-        if(constant.startswith("\"") and constant.endswith("\"")):
+        if(constant.startswith('"') and constant.endswith("\"")):
+            result = True
+        elif(constant.startswith("'") and constant.endswith("'")):
             result = True
 
     return result
@@ -77,7 +79,7 @@ def is_valid_attribute_list(i_attribute_list):
     index_of_astrix = attribute_list.find("*")
 
     if(index_of_astrix == 0):
-        if(attribute_list.count == 1):  # the attribute list is only *
+        if(attribute_list == "*"):  # the attribute list is only *
             result = True
         else:
             result = False
@@ -176,22 +178,27 @@ def is_valid_query(i_query):
     result = "Valid"
     query = i_query.strip()
     query = query.lower()  # so our check is case-insensitive
+    
     if(query[-1]==";"):
         query=query[0:-1]
-
-    select_index = query.find("select")     
-    from_index = query.find("from")
+        select_index = query.find("select")     
+        from_index = query.find("from")
           
-    if(not is_select_part_valid(query[select_index:from_index])):
-        result = "Invalid. Parsing <attribute_list> failed"
-    else:
+        if(not is_select_part_valid(query[select_index:from_index])):
+            result = "Invalid. Parsing <attribute_list> failed"
+        else:
             where_index = query.find("where")
             if(not is_from_part_valid(query[from_index:where_index])):
                 result = "Invalid. Parsing <table_list> failed"
             else:
                 if(not is_where_part_valid(query[where_index:])):
                     result = "Invalid Parsing <condition> failed"
+    else:   #missing ; at the end of the query
+       result = "Invalid Parsing <condition> failed"
+
     print(result)
+
+    return result
 
 
 def main():
