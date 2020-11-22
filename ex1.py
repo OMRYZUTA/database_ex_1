@@ -18,7 +18,7 @@ def is_valid_constant(i_constant):
     elif(constant.isnumeric()):
         result = True
     elif(isinstance(constant, str)):
-        if(constant.startswith('"') and constant.endswith("\"")):
+        if(constant.startswith("\"") and constant.endswith("\"")):
             result = True
         elif(constant.startswith("'") and constant.endswith("'")):
             result = True
