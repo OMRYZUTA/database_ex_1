@@ -57,7 +57,7 @@ tests = [
 
 def main():
     for test in tests:
-        actual = ex1.is_valid_query(test["query"]);
+        actual = ex1.is_valid_query(test["query"])
         if (actual != test["expected"]):
             print("***** Failed test!: " + test["query"] + " ----- actual result: " + actual)
 
