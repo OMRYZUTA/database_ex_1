@@ -16,8 +16,7 @@ def is_valid_attribute(i_attribute, i_tables):
 
 def get_attribute_type(i_attribute):
     att_type = None
-    # (attribute == "Customers.Name" or attribute == "Customers.Age" 
-    #                 or attribute == "Orders.CustomerName" or attribute == "Orders.Product" or attribute == "Orders.Price")
+    
     if(i_attribute=="Customers.Name" or i_attribute=="Orders.CustomerName" or i_attribute=="Orders.Product"):
         att_type = "string"
     elif(i_attribute=="Customers.Age" or i_attribute=="Orders.Price"):
