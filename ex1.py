@@ -151,7 +151,7 @@ def is_select_part_valid(i_select_part, i_tables):
     # i_select_part starts with "select" and there has to be a space right after it
     if (i_select_part[6] == " "):   
         select_part = i_select_part[6:].strip()
-        distinct_index = select_part.find("distinct")
+        distinct_index = select_part.find("DISTINCT")
         if(distinct_index == 0):
             select_part = select_part[8:]   # attribute list starts after the distinct          
         result = is_valid_attribute_list(select_part, i_tables)  

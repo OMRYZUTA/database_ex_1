@@ -13,6 +13,10 @@ tests = [
         "query": "SELECT * FROM Customers, Orders WHERE ((Customers.Name='Mike') AND Orders.Price>1000) OR 'x'=1;",
         "expected": "Valid",
     },
+     {
+         "query": "SELECT * FROM Customers, Orders WHERE ((Customers.Name='Mike') and Orders.Price>1000) OR 'x'=1;",
+         "expected": "Invalid Parsing <condition> failed",
+     },
     {
         "query": "SELECT *,Customers.Name FROM Customers, Orders WHERE ((Customers.Name='Mike') AND Orders.Price>1000) OR 'x'=1;",
         "expected": "Invalid. Parsing <attribute_list> failed",
