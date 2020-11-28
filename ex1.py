@@ -1,6 +1,6 @@
 def is_valid_table(i_table):    
     table = i_table.strip()    
-    return (table == "customers" or table == "orders")
+    return (table == "Customers" or table == "Orders")
 
 
 def is_valid_attribute(i_attribute, i_tables):
@@ -8,8 +8,8 @@ def is_valid_attribute(i_attribute, i_tables):
     result = False
     for table in i_tables: 
         if(attribute.startswith(table)):
-            result = (attribute == "customers.name" or attribute == "customers.age" 
-                    or attribute == "orders.customername" or attribute == "orders.product" or attribute == "orders.price")
+            result = (attribute == "Customers.Name" or attribute == "Customers.Age" 
+                    or attribute == "Orders.CustomerName" or attribute == "Orders.Product" or attribute == "Orders.Price")
 
     return result
 
@@ -118,8 +118,8 @@ def is_valid_condition(i_condition, i_tables):
     else:
         checked_all_options = False
         #there has to be a space right before and right after AND & OR
-        and_index = condition.find(" and ")
-        or_index = condition.find(" or ")
+        and_index = condition.find(" AND ")
+        or_index = condition.find(" OR ")
 
         while(not checked_all_options and not result):
             if(and_index != -1):
@@ -194,14 +194,13 @@ def is_where_part_valid(i_where_part, i_tables):
 def is_valid_query(i_query):
     result = "Valid"
     query = i_query.strip()
-    query = query.lower()  # so our check is case-insensitive
     
     if(query[-1]==";"):
         query=query[0:-1]
         
-        select_index = query.find("select")     
-        from_index = query.find("from")
-        where_index = query.find("where")
+        select_index = query.find("SELECT")     
+        from_index = query.find("FROM")
+        where_index = query.find("WHERE")
 
         (from_result, table_list) = is_from_part_valid(query[from_index:where_index])
 
