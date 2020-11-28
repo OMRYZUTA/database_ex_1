@@ -14,21 +14,36 @@ def is_valid_attribute(i_attribute, i_tables):
     return result
 
 
+def get_attribute_type(i_attribute):
+    att_type = None
+    # (attribute == "Customers.Name" or attribute == "Customers.Age" 
+    #                 or attribute == "Orders.CustomerName" or attribute == "Orders.Product" or attribute == "Orders.Price")
+    if(i_attribute=="Customers.Name" or i_attribute=="Orders.CustomerName" or i_attribute=="Orders.Product"):
+        att_type = "string"
+    elif(i_attribute=="Customers.Age" or i_attribute=="Orders.Price"):
+        att_type = "int"
+
+    return att_type
+
+#returns a tuple: 1st element-bool and 2nd element- type of constant.
 def is_valid_constant(i_constant, i_tables):    
     constant = i_constant.strip()
     result = False
+    constant_type = None
   
     if(is_valid_attribute(constant, i_tables)):
         result = True
+        constant_type = get_attribute_type(constant)
     elif(constant.isnumeric()):
         result = True
+        constant_type = "int"
     elif(isinstance(constant, str)):
-        if(constant.startswith("\"") and constant.endswith("\"")):
+        if((constant.startswith("\"") and constant.endswith("\"")) 
+        or (constant.startswith("'") and constant.endswith("'"))):
             result = True
-        elif(constant.startswith("'") and constant.endswith("'")):
-            result = True
+            constant_type = "string"        
 
-    return result
+    return (result, constant_type)
 
 
 def find_valid_operator(i_simple_condition):
@@ -53,13 +68,16 @@ def find_valid_operator(i_simple_condition):
 
 def is_valid_simple_condition(i_simple_condition, i_tables):
     simple_condition = i_simple_condition.strip()
+    result = False
 
     operator = find_valid_operator(simple_condition)
-    if(operator == -1):        
-        result = False
-    else:        
-        parts_array = simple_condition.split(operator)        
-        result = is_valid_constant(parts_array[0], i_tables) and is_valid_constant(parts_array[1], i_tables)
+    if(operator != -1):
+        parts_array = simple_condition.split(operator)
+        (const1_result, const1_type)=is_valid_constant(parts_array[0], i_tables)
+        (const2_result, const2_type)=is_valid_constant(parts_array[1], i_tables)
+        if(const1_result and const2_result):
+            if(const1_type==const2_type):
+                result=True
 
     return result
 
@@ -116,32 +134,42 @@ def is_valid_condition(i_condition, i_tables):
     if(is_valid_simple_condition(condition, i_tables)):
         result = True    
     else:
-        checked_all_options = False
-        #there has to be a space right before and right after AND & OR
-        and_index = condition.find(" AND ")
-        or_index = condition.find(" OR ")
+        checked_all_options = False        
+        and_index = condition.find("AND")
+        or_index = condition.find("OR")
 
         while(not checked_all_options and not result):
             if(and_index != -1):
-                left_and_part = condition[0:and_index]
-                right_and_part = condition[and_index+5:]
-                if(is_valid_condition(left_and_part, i_tables) and is_valid_condition(right_and_part, i_tables)):
-                    result=True                    
+                if(condition[and_index-1]==")" or condition[and_index-1]==" "):
+                    if(condition[and_index+3]=="(" or condition[and_index+3]==" "):
+                        left_and_part = condition[0:and_index]
+                        right_and_part = condition[and_index+3:]
+                        if(is_valid_condition(left_and_part, i_tables) and is_valid_condition(right_and_part, i_tables)):
+                            result=True                    
+                        else:
+                            and_index = condition.find("AND", and_index+3)
+                    else:
+                        break
                 else:
-                    and_index = condition.find(" and ", and_index+5)
+                    break            
             elif(or_index != -1):
-                left_or_part = condition[0:or_index]
-                right_or_part = condition[or_index+4:]
-                if(is_valid_condition(left_or_part, i_tables) and is_valid_condition(right_or_part, i_tables)):
-                    result=True                    
+                if(condition[or_index-1]==")" or condition[or_index-1]==" "):
+                    if(condition[or_index+2]=="(" or condition[or_index+2]==" "):
+                        left_or_part = condition[0:or_index]
+                        right_or_part = condition[or_index+2:]
+                        if(is_valid_condition(left_or_part, i_tables) and is_valid_condition(right_or_part, i_tables)):
+                            result=True                    
+                        else:
+                            or_index = condition.find("OR", or_index+2)
+                    else:
+                        break
                 else:
-                    or_index = condition.find(" or ", or_index+4)
+                    break    
             else:  # both indexes not found
-                checked_all_options = True                
-
-        if (not result):
-            if(condition[0] == "(" and condition[-1] == ")"):                
-                result = is_valid_condition(condition[1:-1], i_tables)
+                checked_all_options = True
+                if (not result):
+                    if(condition[0] == "(" and condition[-1] == ")"):                
+                        result = is_valid_condition(condition[1:-1], i_tables)                
 
     return result
 

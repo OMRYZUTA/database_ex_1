@@ -11,6 +11,14 @@ tests = [
     },
     {
         "query": "SELECT * FROM Customers, Orders WHERE ((Customers.Name='Mike') AND Orders.Price>1000) OR 'x'=1;",
+        "expected": "Invalid Parsing <condition> failed",
+    },
+    {
+        "query": "SELECT * FROM Customers, Orders WHERE ((Customers.Name='Mike') AND Orders.Price>Customers.Name) OR 'x'=1;",
+        "expected": "Invalid Parsing <condition> failed",
+    },
+    {
+        "query": "SELECT * FROM Customers, Orders WHERE ((Customers.Name='Mike') AND Orders.Price>Customers.Name) OR 3=1;",
         "expected": "Valid",
     },
      {
@@ -60,6 +68,18 @@ tests = [
     {
         "query": "SELECT DISTINCT * FROM Customers,Orders WHERE (Customers.Name=Orders.CustomerName) OR (Orders.Price>1000);",
         "expected": "Valid",
+    },
+    {
+        "query": "SELECT DISTINCT * FROM Customers,Orders WHERE (Customers.Name=Orders.CustomerName)OR (Orders.Price>1000);",
+        "expected": "Valid",
+    },
+    {
+        "query": "SELECT DISTINCT * FROM Customers,Orders WHERE (Customers.Name=Orders.CustomerName)AND(Orders.Price>1000);",
+        "expected": "Valid",
+    },
+     {
+        "query": "SELECT DISTINCT * FROM Customers,Orders WHERE (Customers.Name=Orders.CustomerNameAND(Orders.Price>1000);",
+        "expected": "Invalid Parsing <condition> failed",
     }
 ]
 
