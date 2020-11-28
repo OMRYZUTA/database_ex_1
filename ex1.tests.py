@@ -18,7 +18,7 @@ tests = [
         "expected": "Invalid Parsing <condition> failed",
     },
     {
-        "query": "SELECT * FROM Customers, Orders WHERE ((Customers.Name='Mike') AND Orders.Price>Customers.Name) OR 3=1;",
+        "query": "SELECT * FROM Customers, Orders WHERE ((Customers.Name='Mike') AND Orders.Price>1000) OR 3=1;",
         "expected": "Valid",
     },
      {
