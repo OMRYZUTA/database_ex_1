@@ -160,11 +160,12 @@ def is_select_part_valid(i_select_part, i_tables):
 
 
 def decipher_table_list(i_from_part):
-    result = i_from_part.split(",")
-    for table in result:
-        table = table.strip()
-    
-    return result
+    table_list = i_from_part.split(",")
+    # for table in result:
+    #     table = table.strip()
+    table_list = map(strip, table_list)
+
+    return table_list
 
 #returns a tuple: 1st element-bool and 2nd element-a list of tables.
 def is_from_part_valid(i_from_part):    
