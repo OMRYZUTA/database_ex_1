@@ -163,7 +163,7 @@ def decipher_table_list(i_from_part):
     table_list = i_from_part.split(",")
     # for table in result:
     #     table = table.strip()
-    table_list = map(strip, table_list)
+    table_list = list(map(str.strip, table_list))
 
     return table_list
 
