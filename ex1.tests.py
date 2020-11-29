@@ -3,7 +3,7 @@ import ex1
 tests = [
     {
         "query": "SELECT          Customers.Name FROM  Customers WHERE ((Customers.Name='Mike') AND Orders.Price>1000);",
-        "expected": "Invalid Parsing <condition> failed",
+        "expected": "Invalid Parsing <condition> failed", #no Orders in From
     },
     {
         "query": "SELECT * Customers.Name FROM  Customers WHERE ((Customers.Name='Mike') AND Orders.Price>1000);",

@@ -25,8 +25,6 @@ def get_attribute_type(i_attribute):
     return att_type
 
 # returns a tuple: 1st element-bool and 2nd element- type of constant.
-
-
 def is_valid_constant(i_constant, i_tables):
     constant = i_constant.strip()
     result = False
@@ -131,8 +129,8 @@ def is_valid_table_list(i_table_list):
 
     return result
 
-
-def check_both_side_of_operator(i_condition, i_operator, i_index, i_result, i_checked_all_options, i_tables):
+# function used in is_valid_condition
+def check_both_sides_of_operator(i_condition, i_operator, i_index, i_result, i_checked_all_options, i_tables):
     if(i_operator == "AND"):
         offset = 3
     elif(i_operator == "OR"):
@@ -167,10 +165,11 @@ def is_valid_condition(i_condition, i_tables):
 
         while(not checked_all_options and not result):
             if(and_index != -1):
-                (and_index, result, checked_all_options) = check_both_side_of_operator(
+                #check_both_sides_of_operator function includes the recursive call to is_valid_simple_condition
+                (and_index, result, checked_all_options) = check_both_sides_of_operator(
                     condition, "AND", and_index, result, checked_all_options, i_tables)
             elif(or_index != -1):
-                (or_index, result, checked_all_options) = check_both_side_of_operator(
+                (or_index, result, checked_all_options) = check_both_sides_of_operator(
                     condition, "OR", or_index, result, checked_all_options, i_tables)
             else:  # both indexes not found
                 checked_all_options = True
@@ -204,8 +203,6 @@ def decipher_table_list(i_from_part):
     return table_list
 
 # returns a tuple: 1st element-bool and 2nd element-a list of tables.
-
-
 def is_from_part_valid(i_from_part):
     result = False
     table_list = None
